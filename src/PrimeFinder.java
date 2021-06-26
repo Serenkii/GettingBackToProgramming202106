@@ -39,6 +39,7 @@ public class PrimeFinder extends Thread{
                     System.out.print(i + " ");
             }
         }
+        System.err.println("DEBUG: run() from PrimeFinder has reached its end and the thread should be finisheds");
     }
 
     /**
@@ -46,6 +47,10 @@ public class PrimeFinder extends Thread{
      */
     public void stopFinding() {
         run = false;
+    }
+
+    public boolean isRunning() {
+        return run;
     }
 
     /**
