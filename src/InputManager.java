@@ -3,13 +3,15 @@ import java.util.Scanner;
 
 public class InputManager extends Thread{
 
+    Main programManager;
     String command;
     ArrayList<String> inputHistory;
     Scanner inputScanner;
 
-    public InputManager() {
+    public InputManager(Main programManager) {
         inputHistory = new ArrayList<>();
         inputScanner = new Scanner(System.in);
+        this.programManager = programManager;
     }
 
     @Override
@@ -32,29 +34,60 @@ public class InputManager extends Thread{
                 System.out.println("The Program will be stopped.");
                 System.exit(0);
                 break;
-            case "lol":
-                System.out.println("Hihi you said something funny");
-                break;
+
             case "history":         //fallthrough
             case "commandHistory":  //fallthrough
             case "inputHistory":                //TODO
                 printInputHistory(true);
                 break;
-            case "primes":
-                callPrintPrimes(99999);
-                break;
+
             case "help":
                 System.out.println("Not implemented yet...");
                 break;
+
             case "isPrime":
                 if (!commandIsPrime(commandArr))        //Error:
                     System.out.println("Call the method like that: \"isPrime <number>\"");
                 break;
+
+            case "primes":
+            case "calculatePrimes":
+                if(!commandCalculatePrimes(commandArr))
+                    System.out.println("Call the method either like that \"calculatePrimes <printPrimes>\" or just \"calculatePrimes\"");
+                break;
+                
+            case "stopPrimes":
+            case "stopCalculatePrimes":
+            case "stopCalculatingPrimes":
+                commandStopCalculatingPrimes();
+                break;
+
             default:
                 System.out.println("unknown command");
                 System.out.println("Type \"help\" for help regarding the commands.");
                 break;
         }
+    }
+
+    private void commandStopCalculatingPrimes() {
+        programManager.stopPrimeFinder();
+    }
+
+    private boolean commandCalculatePrimes(String[] commandArr) {
+        boolean printPrimes;
+        if (commandArr.length != 2 || commandArr[1].isBlank()) {
+            programManager.startPrimeFinder(false);
+            return true;
+        }
+        try {
+            printPrimes = Boolean.parseBoolean(commandArr[1]);
+        }
+        catch (Exception e) {
+            System.out.println("You have an argument that is not boolean.");
+            return false;
+        }
+        programManager.startPrimeFinder(printPrimes);
+        return true;
     }
 
     public boolean commandHistory() {
@@ -100,9 +133,5 @@ public class InputManager extends Thread{
         }
     }
 
-    public void callPrintPrimes(int to) {
-        Main main = new Main();
-        //main.printAllNumbers(to);
-    }
 
 }
