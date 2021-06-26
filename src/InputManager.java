@@ -63,7 +63,7 @@ public class InputManager extends Thread{
                 break;
 
             default:
-                System.out.println("unknown command");
+                System.out.println("\"" + this.command +"\" is an unknown command!");
                 System.out.println("Type \"help\" for help regarding the commands.");
                 break;
         }
