@@ -17,10 +17,7 @@ public class Main {
             primeFinder = new PrimeFinder(printPrimes);
         else
             primeFinder.printWhileFinding(printPrimes);
-        if (primeFinder.isAlive())
-            return;
-        primeFinder.start();        //https://stackoverflow.com/questions/8072933/why-does-an-illegalthreadstateexception-occur-when-thread-start-is-called-again -
-                                    // you can start threads only once, then you need a new instance of primeFinder -- maybe use Runnable ?
+        new Thread(primeFinder).start();
     }
 
     public void stopPrimeFinder() {
