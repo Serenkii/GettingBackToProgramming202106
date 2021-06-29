@@ -10,14 +10,18 @@ public class Main {
         System.out.println("Getting back to Java...");
         InputManager inputThread = new InputManager(this);
         inputThread.start();
+        primeFinder = new PrimeFinder(false);
     }
 
     public void startPrimeFinder(boolean printPrimes) {
-        if (primeFinder == null)
-            primeFinder = new PrimeFinder(printPrimes);
-        else
-            primeFinder.printWhileFinding(printPrimes);
+        primeFinder.setPrintWhileFinding(printPrimes);
+        if (primeFinder.isRunning())
+            return;
         new Thread(primeFinder).start();
+    }
+
+    public PrimeFinder getPrimeFinder() {
+        return primeFinder;
     }
 
     public void stopPrimeFinder() {
@@ -25,7 +29,7 @@ public class Main {
             return;
         primeFinder.stopFinding();
         System.out.println("The last found prime is " + primeFinder.getLatestPrime());
-        System.err.println("DEBUG: It will stop finding");
+        //System.err.println("DEBUG: It will stop finding");
     }
 
 }
