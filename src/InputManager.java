@@ -62,6 +62,15 @@ public class InputManager extends Thread{
                 commandStopCalculatingPrimes();
                 break;
 
+            case "":
+                if (!programManager.getPrimeFinder().isRunning() || !programManager.getPrimeFinder().isPrinting())
+                    break;
+                System.out.println("\n\nAs it can be difficult typing out commands while the found prime numbers are printed, the system stopped");
+                System.out.println("printing out these numbers now. It is still calculating. If you want to see it again type \"primes true\".");
+                System.out.println("If you want to stop calculating, type \"stopPrimes\".\n");
+                programManager.getPrimeFinder().setPrintWhileFinding(false);
+                break;
+
             default:
                 System.out.println("\"" + this.command +"\" is an unknown command!");
                 System.out.println("Type \"help\" for help regarding the commands.");
@@ -79,13 +88,8 @@ public class InputManager extends Thread{
             programManager.startPrimeFinder(false);
             return true;
         }
-        try {
-            printPrimes = Boolean.parseBoolean(commandArr[1]);
-        }
-        catch (Exception e) {
-            System.out.println("You have an argument that is not boolean.");
-            return false;
-        }
+        printPrimes = Boolean.parseBoolean(commandArr[1]);      //doesn't need try & catch, it returns false if the String isn't "true"
+
         programManager.startPrimeFinder(printPrimes);
         return true;
     }
@@ -117,9 +121,7 @@ public class InputManager extends Thread{
     }
 
     public boolean callIsPrime(long number) {
-        //TODO change, so that this class (InputManager) doesn't initialize PrimeFinder
-        PrimeFinder pf = new PrimeFinder(false);
-        return pf.isPrime(number);
+        return PrimeFinder.isPrime(number);
     }
 
     public void printInputHistory(boolean brackets) {
