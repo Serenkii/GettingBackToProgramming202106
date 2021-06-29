@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class PrimeFinder extends Thread{
+public class PrimeFinder implements Runnable {
 
     ArrayList<Long> primeList;
     private long latestPrime;
@@ -13,7 +13,7 @@ public class PrimeFinder extends Thread{
      */
     public PrimeFinder(boolean print) {
         primeList = new ArrayList<>();
-        this.run = true;
+        this.run = false;
         this.print = print;
     }
 
@@ -27,6 +27,8 @@ public class PrimeFinder extends Thread{
             primeList.add((long) 2);
             latestPrime = 3;
             primeList.add(latestPrime);
+            if (print)
+                System.out.print("2 3 ");
         }
         else {
             latestPrime = primeList.get(primeList.size() - 1);
@@ -39,7 +41,7 @@ public class PrimeFinder extends Thread{
                     System.out.print(i + " ");
             }
         }
-        System.err.println("DEBUG: run() from PrimeFinder has reached its end and the thread should be finisheds");
+        //System.err.println("DEBUG: run() from PrimeFinder has reached its end and the thread should be finished");
     }
 
     /**
@@ -53,11 +55,15 @@ public class PrimeFinder extends Thread{
         return run;
     }
 
+    public boolean isPrinting() {
+        return print;
+    }
+
     /**
      * Decide whether found primes should be printed.
      * @param print Set true if you want to get every found prime displayed.
      */
-    public void printWhileFinding(boolean print) {
+    public void setPrintWhileFinding(boolean print) {
         this.print = print;
     }
 
@@ -73,7 +79,7 @@ public class PrimeFinder extends Thread{
      * @param number The number that is tested if it is a prime number.
      * @return true if the number is a prime number, otherwise false
      */
-    public boolean isPrime(long number) {
+    public static boolean isPrime(long number) {
         if (number < 2)
             return false;
         if (number == 2 || number == 3)
