@@ -1,6 +1,7 @@
 public class Main {
 
     PrimeFinder primeFinder;
+    FibonacciFinder fibonacciFinder;
 
     public static void main(String[] args) {
         new Main();
@@ -11,6 +12,7 @@ public class Main {
         InputManager inputThread = new InputManager(this);
         inputThread.start();
         primeFinder = new PrimeFinder(false);
+        fibonacciFinder = new FibonacciFinder();
     }
 
     public void startPrimeFinder(boolean printPrimes) {
@@ -22,6 +24,10 @@ public class Main {
 
     public PrimeFinder getPrimeFinder() {
         return primeFinder;
+    }
+
+    public FibonacciFinder getFibonacciFinder() {
+        return fibonacciFinder;
     }
 
     public void stopPrimeFinder() {

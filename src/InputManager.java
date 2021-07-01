@@ -71,6 +71,25 @@ public class InputManager extends Thread{
                 programManager.getPrimeFinder().setPrintWhileFinding(false);
                 break;
 
+            case "getFib" :
+            case "getFibonacci":
+            case "getFibonacciNumber":
+                long n;
+                if (commandArr.length != 2 || commandArr[1].isBlank()) {
+                    System.out.println("You entered no argument. Call the method like that: \"getFibonacciNumber <n>\"");
+                    break;
+                }
+                try {
+                    n = Long.parseLong(commandArr[1]);
+                }
+                catch (Exception e) {
+                    System.out.println("You entered no valid argument. Call the method like that: \"getFibonacciNumber <n>\"");
+                    break;
+                }
+                System.out.print((n > 43) ? "This may take a while...\n" : "");
+                System.out.println("With a(0) = 0 and a(1) = 1, the Fibonacci-Number is a(" + n + ") = " + FibonacciFinder.getFibonacciNumber(n) + ".");
+                break;
+
             default:
                 System.out.println("\"" + this.command +"\" is an unknown command!");
                 System.out.println("Type \"help\" for help regarding the commands.");
