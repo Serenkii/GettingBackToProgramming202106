@@ -1,20 +1,19 @@
 import java.util.ArrayList;
 
-public class PrimeFinder implements Runnable {
+public class PrimeFinder extends Finder {
 
     ArrayList<Long> primeList;
     private long latestPrime;
-    private boolean run;
-    private boolean print;
+    //boolean print; (from parent class)
+    //boolean run; (from parent class)
 
     /**
      *
      * @param print Set true if you want to get every found prime displayed.
      */
     public PrimeFinder(boolean print) {
+        super(print);
         primeList = new ArrayList<>();
-        this.run = false;
-        this.print = print;
     }
 
     /**
@@ -22,7 +21,7 @@ public class PrimeFinder implements Runnable {
      */
     @Override
     public void run() {
-        run = true;
+        super.run = true;
         if (primeList.isEmpty() || primeList.size() < 2) {
             primeList.add((long) 2);
             latestPrime = 3;
@@ -44,9 +43,10 @@ public class PrimeFinder implements Runnable {
         //System.err.println("DEBUG: run() from PrimeFinder has reached its end and the thread should be finished");
     }
 
+    /*
     /**
      *  The thread will stop finding primes.
-     */
+     *
     public void stopFinding() {
         run = false;
     }
@@ -62,10 +62,10 @@ public class PrimeFinder implements Runnable {
     /**
      * Decide whether found primes should be printed.
      * @param print Set true if you want to get every found prime displayed.
-     */
+     *
     public void setPrintWhileFinding(boolean print) {
         this.print = print;
-    }
+    } */
 
     /**
      * @return the latest found prime number.
