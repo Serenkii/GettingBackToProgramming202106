@@ -37,7 +37,7 @@ public class InputManager extends Thread{
 
             case "history":         //fallthrough
             case "commandHistory":  //fallthrough
-            case "inputHistory":                //TODO
+            case "inputHistory":                //TODO with and without brackets
                 printInputHistory(true);
                 break;
 
@@ -52,6 +52,7 @@ public class InputManager extends Thread{
 
             case "primes":
             case "calculatePrimes":
+            case "calculatePrimeNumbers" :
                 if(!commandCalculatePrimes(commandArr))
                     System.out.println("Call the method either like that \"calculatePrimes <printPrimes>\" or just \"calculatePrimes\"");
                 break;
@@ -59,7 +60,9 @@ public class InputManager extends Thread{
             case "stopPrimes":
             case "stopCalculatePrimes":
             case "stopCalculatingPrimes":
-                commandStopCalculatingPrimes();
+            case "stopCalculatePrimeNumbers" :
+            case "stopCalculatingPrimeNumbers" :
+                this.programManager.stopPrimeFinder();
                 break;
 
             case "":
@@ -74,20 +77,38 @@ public class InputManager extends Thread{
             case "getFib" :
             case "getFibonacci":
             case "getFibonacciNumber":
-                long n;
-                if (commandArr.length != 2 || commandArr[1].isBlank()) {
-                    System.out.println("You entered no argument. Call the method like that: \"getFibonacciNumber <n>\"");
+                Long numberArgument = checkForLongArgument(commandArr, true);
+                if (numberArgument == null) {
+                    System.out.println("Call the method like that: \"getFibonacciNumber <number>\"");
                     break;
                 }
-                try {
-                    n = Long.parseLong(commandArr[1]);
-                }
-                catch (Exception e) {
-                    System.out.println("You entered no valid argument. Call the method like that: \"getFibonacciNumber <n>\"");
+
+                if (numberArgument.longValue() <= 40) {
+                    System.out.println(FibonacciFinder.getFibonacciNumberRek(numberArgument.longValue()));
                     break;
                 }
-                System.out.print((n > 43) ? "This may take a while...\n" : "");
-                System.out.println("With a(0) = 0 and a(1) = 1, the Fibonacci-Number is a(" + n + ") = " + FibonacciFinder.getFibonacciNumber(n) + ".");
+                programManager.startFibonacciFinder(numberArgument.longValue());
+
+                break;
+
+            case "fibs":
+            case "calculateFibs":
+            case "calculateFibonacci's":
+            case "calculateFibonaccis":
+            case "calculateFibonacciNumbers":
+                commandCalculateFibonacciNumbers(commandArr);
+                break;
+
+            case "stopFibs":
+            case "stopCalculateFibs":
+            case "stopCalculatingFibs":
+            case "stopCalculateFibonacci's":
+            case "stopCalculatingFibonacci's":
+            case "stopCalculateFibonaccis":
+            case "stopCalculatingFibonaccis":
+            case "stopCalculateFibonacciNumbers":
+            case "stopCalculatingFibonacciNumbers":
+                programManager.stopFibonacciFinder();
                 break;
 
             default:
@@ -97,11 +118,108 @@ public class InputManager extends Thread{
         }
     }
 
-    private void commandStopCalculatingPrimes() {
-        programManager.stopPrimeFinder();
+    /**
+     * @param commandArr The array of commands the user typed in.
+     * @return true if the the typed command has at least one argument which isn't blank, otherwise false
+     */
+    private boolean hasAnyArguments(String[] commandArr) {
+        if (commandArr == null)
+            return false;
+        if (commandArr.length <= 1)
+            return false;
+        if (commandArr[1].isBlank())
+            return false;
+
+        return true;
+    }
+
+    /** Check whether there is a valid long argument in commandArr[1].
+     *
+     * @param commandArr The array of commands the user typed in.
+     * @param printMessages true if error messages should be printed
+     * @return null if there was no valid LongArgument or the length of the array != 0, otherwise the correct long-number
+     */
+    private Long checkForLongArgument(String[] commandArr, boolean printMessages) {
+        if (commandArr == null) {
+            System.err.println("commandArr in InputManager.commandIsPrime(String[] commandArr) is null!");
+            return null;
+        }
+        if (commandArr.length != 2) {
+            if (printMessages)
+                System.out.println("No argument.");
+            return null;
+        }
+        String argument = commandArr[1];
+        long number;
+        try {
+            number = Long.parseLong(argument);
+        }
+        catch (Exception e) {
+            if (printMessages)
+                System.out.println("Your argument is not a number.");
+            return null;
+        }
+        return number;
+    }
+
+    /**
+     *
+     * @param commandArr The array of commands the user typed in.
+     * @param printMessages true if error messages should be printed
+     * @return null if there was no valid boolean argument, otherwise the respective boolean argument
+     */
+    private Boolean checkForBooleanArgument(String[] commandArr, boolean printMessages) {
+        if (commandArr == null) {
+            System.err.println("commandArr in InputManager.commandIsPrime(String[] commandArr) is null!");
+            return null;
+        }
+        if (commandArr.length != 2) {
+            if (printMessages)
+                System.out.println("No argument.");
+            return null;
+        }
+        String argument = commandArr[1];
+        if (argument.equalsIgnoreCase("true"))
+            return true;
+        if (argument.equalsIgnoreCase("false"))
+            return false;
+        return null;
+    }
+
+    private void commandCalculateFibonacciNumbers(String[] commandArr) {
+        if (!hasAnyArguments(commandArr)) {
+            programManager.startFibonacciFinder(false);
+            return;
+        }
+
+        Boolean booleanArgument = checkForBooleanArgument(commandArr, false);
+        Long numberArgument = checkForLongArgument(commandArr, false);
+
+        System.err.println("DEBUG:");
+
+        if (booleanArgument == null && numberArgument == null) {
+            System.err.println("User typed commands that weren't detected as commands but also aren't boolean or long.");
+            return;
+        }
+        if (booleanArgument != null && numberArgument != null) {
+            System.err.println("Somehow the command had a numberArgument and a booleanArgument at the same time...");
+            return;
+        }
+
+        if (booleanArgument != null) {
+            programManager.startFibonacciFinder(booleanArgument.booleanValue());
+            return;
+        }
+        if (numberArgument != null) {
+            programManager.startFibonacciFinder(numberArgument.longValue());
+            return;
+        }
     }
 
     private boolean commandCalculatePrimes(String[] commandArr) {
+        if (commandArr == null)
+            return false;
+
         boolean printPrimes;
         if (commandArr.length != 2 || commandArr[1].isBlank()) {
             programManager.startPrimeFinder(false);
@@ -113,35 +231,14 @@ public class InputManager extends Thread{
         return true;
     }
 
-    public boolean commandHistory() {
-        return true;        //TODO
-    }
-
-    public boolean commandIsPrime(String[] commandArr) {
-        if (commandArr == null) {
-            System.err.println("commandArr in InputManager.commandIsPrime(String[] commandArr) is null!");
+    private boolean commandIsPrime(String[] commandArr) {
+        Long number = checkForLongArgument(commandArr, true);
+        if (number == null)
             return false;
-        }
-        if (commandArr.length != 2) {
-            System.out.println("No argument.");
-            return false;
-        }
-        String argument = commandArr[1];
-        long number;
-        try {
-            number = Long.parseLong(argument);
-        }
-        catch (Exception e) {
-            System.out.println("Your argument is not a number.");
-            return false;
-        }
-        System.out.println(callIsPrime(number));
+        System.out.println(PrimeFinder.isPrime(number.longValue()));
         return true;
     }
 
-    public boolean callIsPrime(long number) {
-        return PrimeFinder.isPrime(number);
-    }
 
     public void printInputHistory(boolean brackets) {
         for (String input : inputHistory) {
@@ -154,5 +251,9 @@ public class InputManager extends Thread{
         }
     }
 
+    public boolean commandHistory() {
+        return true;        //TODO (forgot what this was supposed to do, I'll keep it for later)
+    }
 
 }
+//TODO Maybe make a class for all command[...] methods?
